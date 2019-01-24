@@ -1,0 +1,28 @@
+{% set major_version = salt['pillar.get']('kibana:major_version', 5) %}
+
+{% set kibana = salt['grains.filter_by']({
+	'Debian': {
+		'pkg': 'kibana',
+		'apt_file': '/etc/apt/sources.list.d/elasticsearch.list',
+		'key_url': 'https://packages.elastic.co/GPG-KEY-elasticsearch',
+		'dirs': {
+			'home': '/usr/share/kibana',
+			'bin': '/usr/share/kibana/bin',
+			'config': '/etc/kibana',
+			'data': '/var/lib/kibana',
+			'optimize': '/usr/share/kibana/optimize',
+			'plugins': '/usr/share/kibana/plugins'
+		}
+	},
+	'RedHat': {
+		'pkg': 'kibana',
+	}
+}, merge=salt['pillar.get']('kibana:lookup')) %}
+
+{#
+'Debian': {
+	'repofile': '/etc/apt/sources.list.d/elasticsearch.list',
+	'pkgrepo': 'deb https://artifacts.elastic.co/packages/5.x/apt stable main',
+	'repokey': 'https://artifacts.elastic.co/GPG-KEY-elasticsearch',
+}
+#}
